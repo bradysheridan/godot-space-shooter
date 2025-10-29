@@ -5,6 +5,8 @@ var direction_x: float
 var rotation_speed: float
 var speed = base_speed
 
+signal collision
+
 # Given texture file name, return meteor speed (bigger = slower)
 func get_meteor_speed(file_name):
 	if "_big" in file_name: return base_speed * 0.8
@@ -41,3 +43,13 @@ func _ready():
 func _process(delta):
 	position += Vector2(direction_x, 1.0) * speed * delta
 	rotation_degrees += rotation_speed * delta
+	
+func _on_body_entered(body: Node2D) -> void:
+	collision.emit()
+
+func _on_area_entered(area: Area2D) -> void:
+	# Remove meteor
+	area.queue_free()
+	
+	# Remove laser
+	queue_free()
